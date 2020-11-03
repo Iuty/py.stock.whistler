@@ -143,6 +143,7 @@ class HqProxy:
         
         dailyfile = DailyFile(arg)
         datainfile = DailyFile(arg).getData()[-1]
+        
         derta = (datetime.date.today() - datainfile[0]).days
         if derta == 0:
             return
@@ -172,7 +173,7 @@ class HqProxy:
         codes = DailyFile("").getAllTitle()
         for code in codes:
             self.updateKLine(code)
-            print(code)
+            
         pass
     
     def getCqcxInfo(self,code):
@@ -204,5 +205,5 @@ class HqProxy:
 if __name__ == "__main__":
     hq = HqProxy()
     
-    #hq.reNewDailyData()
+    hq.reNewDailyData()
     #print(hq.getCurrentDaily(["600703","000002"]))

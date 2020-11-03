@@ -58,7 +58,7 @@ def doUpdate():
     pass
 
 def doMonitor(end):
-    bps = getBuyPoints
+    bps = getBuyPoints()
     for bp in bps:
         bps[bp]["noticed"] = False
     sendNotice("开始监控行情")
@@ -67,18 +67,23 @@ def doMonitor(end):
         if datetime.datetime.now().time() > end:
             break
         
-        getCurrentDaily()
+        getCurrentDaily(bps)
         for bp in bps:
             if not bps[bp]["noticed"]:
                 #cond1
                 if bps[bp]["low"] < bps[bp]["buypoint"] * 1.005:
-                    sendNotice("[Warn] code:{} can buy at {}".format(bp,round(bps[bp]["buypoint"],2)))
+                    sendNotice("[Warn] code:{} can buy at {},last = {}".format(bp,round(bps[bp]["buypoint"],2),bps[bp]["date"]))
+                    bps[bp]["noticed"] = True
         time.sleep(1)
     
     sendNotice("行情监控结束")
     pass
 
+def timeCompare(ta,tb):
+    return (ta.hour == tb.hour) and (ta.minute == tb.minute)
+
 def doService():
+    
     while True:
         
         start1 = datetime.time(9,25)
@@ -87,21 +92,35 @@ def doService():
         start2 = datetime.time(12,28)
         end2 = datetime.time(15)
         
-        update = datetime.time(17)
+        update = datetime.time(18)
         
         n = datetime.datetime.now()
-        if start1 == n.time():
+        if timeCompare(start1 ,n.time()):
             doMonitor(end1)
         
-        if start2 == n.time():
+        if timeCompare(start2 ,n.time()):
             doMonitor(end2)
         
-        if update == n.time():
+        if timeCompare(update ,n.time()):
             doUpdate()
         
         time.sleep(5)
     pass
 
+def startService():
+    setEnviron()
+    sendNotice("启动服务")
+    try:
+        doService()
+    except Exception as err:
+        sendNotice("服务异常停止退出：{}".format(err))
+    pass
+
 if __name__ == "__main__":
-    #doService()
-    doUpdate()
+    
+    
+    startService()
+    #doUpdate()
+    #doMonitor(datetime.time(17,6))
+    
+    
