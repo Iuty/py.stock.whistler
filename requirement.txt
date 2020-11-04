@@ -1,2 +1,2 @@
 pytdx
-git+https://github.com/IutyLib.git
+git+https://github.com/Iuty/IutyLib.git
