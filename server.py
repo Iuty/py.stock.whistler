@@ -1,5 +1,5 @@
 # coding： utf8
-
+os.environ['STOCKSERVICEPATH']=os.path.abspath(".")
 from IutyLib.stock.files import DailyFile
 from IutyLib.notice.notice import WeChat_SMS
 from prx.HqProxy import HqProxy
